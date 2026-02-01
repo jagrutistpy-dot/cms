@@ -349,7 +349,7 @@ def update_patient(handler, patient_id):
     if not existing:
         return send_404(handler)
 
-    allowed = ["first_name", "last_name", "dob", "phone", "email", "address"]
+    allowed = ["first_name", "last_name", "age", "gender", "phone"]
     merged = {k: data.get(k, existing.get(k)) for k in allowed}
 
     updated = service_update(patient_id, merged)

@@ -33,6 +33,12 @@ def init_database():
         )
     """)
 
+    # Ensure new columns exist (age and gender) for newer UI
+    if not _column_exists(conn, "patients", "age"):
+        conn.execute("ALTER TABLE patients ADD COLUMN age INTEGER")
+    if not _column_exists(conn, "patients", "gender"):
+        conn.execute("ALTER TABLE patients ADD COLUMN gender TEXT")
+
     conn.execute("""
         CREATE TABLE IF NOT EXISTS doctors (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

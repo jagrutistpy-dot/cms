@@ -45,16 +45,15 @@ def patients_create(data: dict):
 
     cur = conn.execute(
         """
-        INSERT INTO patients (first_name, last_name, dob, phone, email, address, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO patients (first_name, last_name, age, gender, phone, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
             data.get("first_name"),
             data.get("last_name"),
-            data.get("dob"),
+            data.get("age"),
+            data.get("gender"),
             data.get("phone"),
-            data.get("email"),
-            data.get("address"),
             now,
         ),
     )
@@ -70,16 +69,15 @@ def patients_update(patient_id: int, data: dict):
     conn.execute(
         """
         UPDATE patients
-        SET first_name=?, last_name=?, dob=?, phone=?, email=?, address=?, updated_at=?
+        SET first_name=?, last_name=?, age=?, gender=?, phone=?, updated_at=?
         WHERE id=?
         """,
         (
             data.get("first_name"),
             data.get("last_name"),
-            data.get("dob"),
+            data.get("age"),
+            data.get("gender"),
             data.get("phone"),
-            data.get("email"),
-            data.get("address"),
             now,
             patient_id,
         ),

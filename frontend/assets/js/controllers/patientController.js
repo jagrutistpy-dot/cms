@@ -14,10 +14,9 @@ export function initPatientController() {
     const data = {
       first_name: $("first_name").value.trim(),
       last_name: $("last_name").value.trim(),
-      dob: $("dob").value || null,
+      age: $("age").value ? Number($("age").value) : null,
+      gender: $("gender").value || null,
       phone: $("phone").value.trim(),
-      email: $("email").value.trim(),
-      address: $("address").value.trim(),
     };
 
     const { editingId } = getState();
@@ -36,7 +35,30 @@ export async function loadPatients() {
   spinner.style.display = "block";
   table.style.display = "none";
 
-  const patients = await apiGetAll();
+  let patients = await apiGetAll();
+
+  // Compute age from dob for older records that don't have `age` populated
+  patients = (patients || []).map((p) => {
+    // Normalize age to number or null
+    if (p.age !== null && p.age !== undefined && p.age !== "") {
+      p.age = Number(p.age);
+    } else if (p.dob) {
+      const d = new Date(p.dob);
+      if (!Number.isNaN(d.getTime())) {
+        const ageYears = Math.floor((Date.now() - d.getTime()) / (365.25 * 24 * 3600 * 1000));
+        p.age = ageYears;
+      } else {
+        p.age = null;
+      }
+    } else {
+      p.age = null;
+    }
+
+    // Ensure gender property exists
+    p.gender = p.gender || null;
+    return p;
+  });
+
   setState({ patients });
   renderPatientTable(patients);
 
@@ -55,6 +77,10 @@ export async function createNewPatient(data) {
 
 export async function editPatient(id) {
   const patient = await apiGetOne(id);
+  if (!patient) {
+    showAlert("Patient not found.", "error");
+    return;
+  }
   setState({ editingId: id });
   fillForm(patient);
   window.scrollTo({ top: 0, behavior: "smooth" });

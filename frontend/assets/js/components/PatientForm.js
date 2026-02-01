@@ -9,11 +9,10 @@ export function resetForm() {
 export function fillForm(patient) {
   $("first_name").value = patient.first_name || "";
   $("last_name").value = patient.last_name || "";
-  $("dob").value = patient.dob || "";
+  $("age").value = patient.age != null ? patient.age : "";
+  $("gender").value = patient.gender || "";
   $("phone").value = patient.phone || "";
-  $("email").value = patient.email || "";
-  $("address").value = patient.address || "";
 
   $("submitBtn").textContent = "Update Patient";
   $("cancelBtn").style.display = "inline-block";
-}
+} 
