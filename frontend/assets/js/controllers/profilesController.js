@@ -13,7 +13,7 @@ import { apiGetAll as apiGetAllDoctors } from "../services/doctorService.js";
 const COLUMNS = [
   { key: "id", label: "ID" },
   { key: "patient_name", label: "Patient" },
-  { key: "email", label: "Email" },
+  { key: "age", label: "Age" },
   { key: "phone", label: "Phone" },
   { key: "doctor_name", label: "Doctor" },
 ];
@@ -58,13 +58,31 @@ async function loadProfiles() {
 
   const doctorMap = new Map((doctors||[]).map(d => [d.id, d.name]));
 
-  allRows = (patients || []).map(p => ({
-    id: p.id,
-    name: `${p.first_name || ""} ${p.last_name || ""}`.trim(),
-    email: p.email || "",
-    phone: p.phone || "",
-    doctor_name: (invByPatient.get(p.id) && invByPatient.get(p.id).doctor_name) || "",
-  }));
+  allRows = (patients || []).map(p => {
+    // compute age if missing (from dob) or use provided age
+    let age = null;
+    if (p.age !== undefined && p.age !== null && p.age !== "") {
+      age = Number(p.age);
+    } else if (p.dob) {
+      const d = new Date(p.dob);
+      if (!Number.isNaN(d.getTime())) {
+        age = Math.floor((Date.now() - d.getTime()) / (365.25 * 24 * 3600 * 1000));
+      }
+    }
+
+    // sanitize name parts to avoid literal 'undefined' showing up
+    const fn = (p.first_name && p.first_name !== "undefined") ? p.first_name : "";
+    const ln = (p.last_name && p.last_name !== "undefined") ? p.last_name : "";
+    const fullname = `${fn} ${ln}`.trim();
+
+    return {
+      id: p.id,
+      patient_name: fullname || "-",
+      age: age,
+      phone: p.phone || "",
+      doctor_name: (invByPatient.get(p.id) && invByPatient.get(p.id).doctor_name) || "",
+    };
+  });
 
   refresh();
 
@@ -77,7 +95,7 @@ function getRows() {
   const sortKey = $("sortBy")?.value ?? "id";
   const sortDir = $("sortDir")?.value ?? "asc";
 
-  const filtered = filterList(allRows, q, ["id", "patient_name", "email", "phone", "doctor_name"]);
+  const filtered = filterList(allRows, q, ["id", "patient_name", "age", "phone", "doctor_name"]);
   return sortList(filtered, sortKey, sortDir);
 }
 

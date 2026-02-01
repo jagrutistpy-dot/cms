@@ -1,23 +1,17 @@
 import { $ } from "../utils/dom.js";
 import { editDoctor, deleteDoctorAction } from "../controllers/doctorController.js";
-
 export function renderDoctorTable(doctors) {
   const body = $("doctorsTableBody");
   const noDoctors = $("noDoctors");
-
   body.innerHTML = "";
-
   if (!doctors || doctors.length === 0) {
     noDoctors.style.display = "block";
     return;
   }
-
   noDoctors.style.display = "none";
-
   doctors.forEach((d) => {
     const row = document.createElement("tr");
     row.className = "border-b";
-
     row.innerHTML = `
       <td class="px-3 py-2">${d.id}</td>
       <td class="px-3 py-2 font-medium text-gray-900">${d.name}</td>
@@ -29,10 +23,8 @@ export function renderDoctorTable(doctors) {
         <button type="button" class="btn-danger text-white py-1 px-3 rounded" data-delete="${d.id}">Delete</button>
       </td>
     `;
-
     body.appendChild(row);
   });
-
   // delegated handlers
   body.onclick = (e) => {
     const editBtn = e.target.closest("[data-edit]");
@@ -41,7 +33,6 @@ export function renderDoctorTable(doctors) {
       if (!Number.isNaN(id)) editDoctor(id);
       return;
     }
-
     const delBtn = e.target.closest("[data-delete]");
     if (delBtn) {
       const id = Number(delBtn.getAttribute("data-delete"));
