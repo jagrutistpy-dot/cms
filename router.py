@@ -332,3 +332,96 @@ class PatientRouter(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{timestamp}] [Server] {format % args}")
+
+
+# ---------------------------
+# Handlers for UPDATE / DELETE
+# ---------------------------
+
+def update_patient(handler, patient_id):
+    from core.request import parse_json_body
+    from services.patient_service import service_get_one, service_update
+
+    data = parse_json_body(handler) or {}
+
+    # Ensure we don't clobber required fields when a partial payload is sent.
+    existing = service_get_one(patient_id)
+    if not existing:
+        return send_404(handler)
+
+    allowed = ["first_name", "last_name", "dob", "phone", "email", "address"]
+    merged = {k: data.get(k, existing.get(k)) for k in allowed}
+
+    updated = service_update(patient_id, merged)
+    if not updated:
+        return send_404(handler)
+    return send_json(handler, 200, updated)
+
+
+def delete_patient(handler, patient_id):
+    from services.patient_service import service_delete
+
+    deleted = service_delete(patient_id)
+    if not deleted:
+        return send_404(handler)
+    return send_json(handler, 200, deleted)
+
+
+def update_doctor(handler, doctor_id):
+    from core.request import parse_json_body
+    from services.doctor_service import service_update
+
+    data = parse_json_body(handler)
+    updated = service_update(doctor_id, data)
+    if not updated:
+        return send_404(handler)
+    return send_json(handler, 200, updated)
+
+
+def delete_doctor(handler, doctor_id):
+    from services.doctor_service import service_delete
+
+    deleted = service_delete(doctor_id)
+    if not deleted:
+        return send_404(handler)
+    return send_json(handler, 200, deleted)
+
+
+def update_billing(handler, billing_id):
+    from core.request import parse_json_body
+    from services.billing_service import service_update
+
+    data = parse_json_body(handler)
+    updated = service_update(billing_id, data)
+    if not updated:
+        return send_404(handler)
+    return send_json(handler, 200, updated)
+
+
+def delete_billing(handler, billing_id):
+    from services.billing_service import service_delete
+
+    deleted = service_delete(billing_id)
+    if not deleted:
+        return send_404(handler)
+    return send_json(handler, 200, deleted)
+
+
+def update_invoice(handler, invoice_id):
+    from core.request import parse_json_body
+    from services.invoice_service import service_update
+
+    data = parse_json_body(handler)
+    updated = service_update(invoice_id, data)
+    if not updated:
+        return send_404(handler)
+    return send_json(handler, 200, updated)
+
+
+def delete_invoice(handler, invoice_id):
+    from services.invoice_service import service_delete
+
+    deleted = service_delete(invoice_id)
+    if not deleted:
+        return send_404(handler)
+    return send_json(handler, 200, deleted)

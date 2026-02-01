@@ -4,7 +4,8 @@ import sqlite3
 DB_FILE = "clinic.db"
 
 def get_connection():
-    conn = sqlite3.connect(DB_FILE)
+    # Increase timeout to reduce "database is locked" errors under concurrent access
+    conn = sqlite3.connect(DB_FILE, timeout=30)
     conn.row_factory = sqlite3.Row
     return conn
 
