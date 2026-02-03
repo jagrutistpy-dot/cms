@@ -25,6 +25,9 @@ body {
 .btn-primary { background: var(--brand-1); color: #fff; }
 .btn-primary:hover { background: var(--brand-2); }
 
+.btn-danger { background: #ef4444 !important; color: #fff !important; padding: 0.25rem 0.75rem !important; border-radius: 0.375rem !important; }
+.btn-danger:hover { background: #dc2626 !important; }
+
  /* Get Started CTA: force the exact requested blue and hover state */
  .btn-get-started { background: #abc4ff; color: #000; }
  .btn-get-started i, .btn-get-started svg { color: #000; fill: #000; }

@@ -40,12 +40,6 @@ def init_database():
     if not _column_exists(conn, "patients", "gender"):
         conn.execute("ALTER TABLE patients ADD COLUMN gender TEXT")
 
-    # Ensure doctors table has a schedule column for new UI
-    if not _column_exists(conn, "doctors", "schedule"):
-        conn.execute("ALTER TABLE doctors ADD COLUMN schedule TEXT")
-        # Backfill existing rows with a sensible default so UI shows a schedule for older records
-        conn.execute("UPDATE doctors SET schedule = 'MON-SAT' WHERE schedule IS NULL OR schedule = ''")
-
     conn.execute("""
         CREATE TABLE IF NOT EXISTS doctors (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -57,6 +51,12 @@ def init_database():
             updated_at TEXT
         )
     """)
+
+    # Ensure doctors table has a schedule column for new UI
+    if not _column_exists(conn, "doctors", "schedule"):
+        conn.execute("ALTER TABLE doctors ADD COLUMN schedule TEXT")
+        # Backfill existing rows with a sensible default so UI shows a schedule for older records
+        conn.execute("UPDATE doctors SET schedule = 'MON-SAT' WHERE schedule IS NULL OR schedule = ''")
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS appointments (
