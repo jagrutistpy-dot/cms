@@ -120,3 +120,8 @@ header svg * {
 footer {
   color: #1f2937;
 }
+
+/* Ensure primary submit buttons with id=submitBtn use black text for readability */
+button#submitBtn, #submitBtn {
+  color: #000 !important;
+}
