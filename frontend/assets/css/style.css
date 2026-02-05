@@ -48,12 +48,14 @@ body {
    ------------------------------------------------------------------ */
 
 body {
-  /* site background set to requested light blue */
-  background-color: #e2eafc; /* requested page background */
-  background-image: none;
+  /* Use the provided clinic image as the site background for every page.
+     Remove the flat page color so the image shows through. */
+  background-color: transparent;
+  background-image: url('/assets/images/clinic.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
@@ -92,6 +94,8 @@ body::before {
 header, footer {
   background: #abc4ff; /* requested header/footer color */
   backdrop-filter: blur(2px);
+  position: relative;
+  z-index: 2; /* keep header/footer above the page overlay/background */
 }
 
 /* Accent background used for small icon (hero) */
