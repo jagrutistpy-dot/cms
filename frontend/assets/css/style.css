@@ -51,7 +51,7 @@ body {
   /* Use the provided clinic image as the site background for every page.
      Remove the flat page color so the image shows through. */
   background-color: transparent;
-  background-image: url('/assets/images/clinic.jpg');
+  background-image: url('/assets/images/c.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -92,8 +92,8 @@ body::before {
 
 /* Header & footer use requested light blue */
 header, footer {
-  background: #abc4ff; /* requested header/footer color */
-  backdrop-filter: blur(2px);
+  background: transparent; /* remove header/footer background color so page image shows through */
+  backdrop-filter: none;
   position: relative;
   z-index: 2; /* keep header/footer above the page overlay/background */
 }
